@@ -1,7 +1,6 @@
 %Tests a given size-24 tournament case
 %Only need to test blobs with size between 4 and 6; sizes should add to 22
-%(If sizes don't add to 22, there are probably bugs, so don't do that...)
-%Blockparams is a length-4 vector of sizes for each block
+%Undefined behavior if blocksizes doesn't add to 22
 
 %Things that are slow: Big D blocks (more cases for the D block and more
 %free variables at the end)
@@ -9,6 +8,7 @@ function outcats = runCase(blocksizes)
     parpool(1); %Increase this if you're on a multi-core computer
 
     %Step 0: Initialize blockparams to a format I expect
+    %Blockparams is a 4x2 matrix of start and end indices of each block
     blockparams = zeros(4, 2);
     blockparams(1, 1) = 1; blockparams(4, 2) = sum(blocksizes);
     for i = 2:4
@@ -18,7 +18,7 @@ function outcats = runCase(blocksizes)
 
     'Step 1: Get all isomorphism classes for AB'
     outcatAB = {};
-    load('metacatalogtt4.mat');
+    metacatalog = load('metacatalogtt4.mat').metacatalog;
     parfor i = 1:size(metacatalog{blocksizes(1)+1}, 2)
         for j = 1:size(metacatalog{blocksizes(2)+1}, 2)
             strcat("i = ", num2str(i), " of ",...
@@ -62,7 +62,6 @@ function outcats = runCase(blocksizes)
 
     'Step 2: Get all isomorphism classes for BC'
     outcatBC = {};
-    load('metacatalogtt4.mat');
     parfor i = 1:size(metacatalog{blocksizes(3)+1}, 2)
         for j = 1:size(metacatalog{blocksizes(2)+1}, 2)
             strcat("i = ", num2str(i), " of ",...
@@ -162,7 +161,7 @@ function outcats = runCase(blocksizes)
     
     'Step 4: Add all possible D tournaments'
     outcat = {};
-    load('metacatalogtt5.mat');
+    metacatalog = load('metacatalogtt5.mat').metacatalog;
     parfor i = 1:size(outcatABCs, 2)
         pause(0.001); %So stuff prints
 	for j = 1:size(metacatalog{blocksizes(4)+1}, 2)

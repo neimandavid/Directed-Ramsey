@@ -3,7 +3,8 @@
 %Change these variables:
 %n = number of vertices in M
 %k = size of TTk to be avoided
-%M contains edges to be enforced (and -1 for unknown)
+%M contains edges to be enforced (-1 for unknown). Undefined behavior if
+%known edges aren't strictly directed.
 
 %Outputs the following:
 %CNF file for the SAT problem

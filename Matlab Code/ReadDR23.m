@@ -1,4 +1,11 @@
-%Load some DR TT6-free 23-vertex tournaments
+%Goes through all doubly-regular 23-vertex tournaments from McKay's
+%database (https://users.cecs.anu.edu.au/~bdm/data/digraphs.html) and looks
+%for all those that are TT6-free
+
+addpath('helper_functions')
+addpath('data')
+
+%Load all doubly-regular 23-vertex tournaments
 goodcat = {};
 fid = fopen('drtourn23');
 

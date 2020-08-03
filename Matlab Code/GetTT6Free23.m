@@ -1,19 +1,26 @@
-%7374 (ran for regular, no tournaments (fails on ABC! Can verify with a SAT solver in about 10 minutes))
+%Checks a particular set of block sizes for 23-vertex TT6-free tournaments
+%Change the variable blocksizes to try different cases; it should sum to 21
+
+%Results:
+
+%Using this method:
 %6663 (found 11, all subtournaments of ST27)
 %6654 (found 17, all subtournaments of ST27)
 %6645 (found same 17 as 6654, still all subtournaments of ST27)
 %6564 (found 20 (no 10 or 21).)
 %6555 (found all 22 subtournaments)
-%6465 (found 20 (no 9 or 22). Previously ran for regular but reran this version)
-%5655 (found 20 (no 10 or 21). NOTE: Any non-DR tournament will get caught by an earlier case)
-%5556 (only care about the three DR tournaments; by definition, anything else pops up in another category also)
+%6465 (found 20 (no 9 or 22).)
+%5655 (found 20 (no 10 or 21).)
 
-global memonchoosek;
-memonchoosek = memoize(@nchoosek);
-memonchoosek.CacheSize = 1000;
+%Using different methods:
+%7374 (No tournaments. Instead, use a SAT solver (see 7374_CNF folder) to show this set of ABC sizes fails.)
+%5556 (We only care about the DR tournaments; by definition, anything else pops up in another category also. Use ReadDR23 to get a list of the three that work.)
+
+addpath('helper_functions')
+addpath('data')
 
 tic
-blocksizes = [6, 6, 4, 5]; %Sum to 21
+blocksizes = [6, 5, 6, 4]; %Sum to 21
 n = sum(blocksizes) + 2;
 myfilename = strcat('myfile', num2str(blocksizes), '.mat');
 myfilename = myfilename(~isspace(myfilename))
@@ -150,4 +157,20 @@ end
 outcats = stripIsomorphicCopies(outcat);
 save(myfilename);
 toc
-return;
+
+%Check generated tournaments against subtournaments of ST27
+load('T27TT6.mat')
+subtourncat = [];
+nck = nchoosek(1:25, 2);
+for i = 1:size(nck, 1)
+    v = 3:27; v(nck(i, :)) = [];
+    temp23 = M(v, v);
+    subtourncat = [subtourncat, {digraph(temp23)}];
+end
+subtourncats = stripIsomorphicCopies(subtourncat);
+% getIsomorphismClasses([subtourncats, outcats]) %Comes back with 1-22, as we'd expect
+
+%getIsomorphismClasses(testsubtourncat) 
+outclasses = getIsomorphismClasses([subtourncats, outcats]);
+%outclasses = (outclasses(23:end))
+outclasses = sort(outclasses(23:end)) %Check for stuff > 22; we know the first 22 are unique since they're our subtournament catalog

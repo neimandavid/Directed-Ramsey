@@ -1,14 +1,17 @@
-%Goal: Find all vectors v with no 3-cycles (thus transitive)
-function outlist = listTTks(T, k, v, outlist)
+%Goal: Find a vector v of length k with no 3-cycles (thus transitive)
+%If successful, return true (found a transitive), else fail
+%Works like listTTks, but stops early on finding one
+function [out, ttk] = hasTTk(T, k, v)
     if nargin < 3
         v = [];
     end
-    if nargin < 4
-        outlist = zeros(0, k);
-    end
     if size(v, 2) == k
-        outlist = [outlist; v];
+        out = true;
+        ttk = v;
+        return;
     else
+        out = false;
+        ttk = 'None';
         n = size(T, 1);
         %Assume (by induction) v is in increasing order
         %If too close to the end, there's no way to fill in
@@ -35,9 +38,12 @@ function outlist = listTTks(T, k, v, outlist)
                     end
                 end
             end
-            if isgood
-                outlist = listTTks(T, k, [v, i], outlist);
+            [hasttk, ttk] = hasTTk(T, k, [v, i]);
+            if isgood && hasttk
+                out = hasttk;
+                return;
             end
         end
+        return; %Fail if nothing works
     end
 end

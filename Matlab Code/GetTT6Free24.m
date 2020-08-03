@@ -1,5 +1,11 @@
+%Checks a particular set of block sizes for 23-vertex TT6-free tournaments
+%Change the variable v to try different cases; it should sum to 22
+
+addpath('helper_functions')
+addpath('data')
+
 v = [6, 6, 6, 4]; %Change this vector to whatever case you want to run
-outcats = runCase(v);
+outcats = runCase(v); %Call a helper function to run this case
 
 %Check isomorphism classes against stuff that extends to the 27.
 

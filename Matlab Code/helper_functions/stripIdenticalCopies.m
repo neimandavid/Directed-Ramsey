@@ -1,3 +1,5 @@
+%Strips identical copies of tournaments from catalog
+%Works very similarly to stripIsomorphicCopies
 function catalog = stripIdenticalCopies(catalog)
     i = 1;
     while i <= size(catalog, 2)

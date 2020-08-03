@@ -1,3 +1,7 @@
+%Recursively brute-forces edge combinations in partial tournament matrix G,
+%looking for all TTk-free ways to fill out the matrix
+%Assumes there's a known block in the upper left of size norig (such as
+%when trying to extend a tournament)
 function catalog = bruteForceColumns(G, k, norig, colcats)
     %Need G, k, norig; colcats optional
     %norig: Size of the known upper-left block

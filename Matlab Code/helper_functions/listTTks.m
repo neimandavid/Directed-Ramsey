@@ -1,16 +1,15 @@
-%Goal: Find vector v with no 3-cycles (thus transitive)
-%If successful, return true (found a transitive), else fail
-function [out, ttk] = hasTTk(T, k, v)
+%Goal: Find all vectors v of length k such that the corresponding subtournaments of T have no 3-cycles (and are thus transitive)
+%We do this by iteratively building up v, allowing us to stop early if a 3-cycle is found
+function outlist = listTTks(T, k, v, outlist)
     if nargin < 3
         v = [];
     end
+    if nargin < 4
+        outlist = zeros(0, k);
+    end
     if size(v, 2) == k
-        out = true;
-        ttk = v;
-        return;
+        outlist = [outlist; v];
     else
-        out = false;
-        ttk = 'None';
         n = size(T, 1);
         %Assume (by induction) v is in increasing order
         %If too close to the end, there's no way to fill in
@@ -37,12 +36,9 @@ function [out, ttk] = hasTTk(T, k, v)
                     end
                 end
             end
-            [hasttk, ttk] = hasTTk(T, k, [v, i]);
-            if isgood && hasttk
-                out = hasttk;
-                return;
+            if isgood
+                outlist = listTTks(T, k, [v, i], outlist);
             end
         end
-        return; %Fail if nothing works
     end
 end

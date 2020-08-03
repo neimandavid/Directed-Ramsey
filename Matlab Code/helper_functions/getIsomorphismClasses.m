@@ -1,3 +1,8 @@
+%Returns a vector of labels for the different isomorphism classes in
+%catalog
+%First isomorphism class found is 1, second is 2, etc.
+%Works similarly to stripIsomorphicCopies, except that this labels future
+%instances of isomorphism classes instead of deleting them
 function classes = getIsomorphismClasses(catalog)
     nextClass = 1;
     classes = zeros(size(catalog));

@@ -1,3 +1,8 @@
+%Recursively brute forces combinations of edges in a partial adjacency matrix G looking for TTk-free tournaments
+%Unknown edges are denoted with -1s
+%Uses constraint propagation to identify impossible configurations early
+%Undefined results if G isn't a partial adjacency matrix of a tournament
+
 function catalog = bruteForceEdges(G, k, forceRegular)
     %G, k needed; other arguments optional
     %forceRegular tells propagation to also enforce regularity of G
