@@ -1,1 +1,1 @@
-Old version of the repo didn't check for isomorphisms between 33-vertex TT7-free tournaments. McKay correctly pointed out that our original 84 tournaments only represent 49 isomorphism classes. Representatives of those 49 isomorphism classes can be found in 33-Vertex Corrected.
+McKay correctly pointed out that our original 84 tournaments only represent 49 isomorphism classes. Representatives of those 49 isomorphism classes can be found in 33-Vertex Non-Isomorphic.
