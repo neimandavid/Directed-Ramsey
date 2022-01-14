@@ -1,0 +1,82 @@
+TT5 = [0 1 1 1 1; 0 0 1 1 1; 0 0 0 1 1; 0 0 0 0 1; 0 0 0 0 0];
+H5 = [0 1 1 1 1; 0 0 1 1 1; 0 0 0 1 0; 0 0 0 0 1; 0 0 1 0 0];
+
+% qr11 = [0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0];
+% QR11 = zeros(11, 11);
+% for i = 0:10
+%     QR11(i+1, :) = circshift(qr11, i);
+% end
+% QR11 = makeQR(11)
+% 
+% isSubtournament(TT5, QR11)
+% isSubtournament(H5, QR11)
+
+
+% n = 10;
+% fileID = fopen(strcat('tourn', num2str(n), '.txt'), 'r');
+% A = fscanf(fileID, '%s');
+% 
+% 'Checking TT5 H5'
+% nsuccesses = 0;
+% successes = []
+% Aind = 1;
+% while Aind < numel(A)
+%     numleft = numel(A)-Aind
+%     nsuccesses
+%     M = zeros(n, n);
+%     for i = 1:n
+%         for j = i+1:n
+%             M(i, j) = A(Aind)-48; %Convert from ASCII
+%             M(j, i) = 1-M(i, j);
+%             Aind = Aind + 1; %Move to next character
+%         end
+%     end
+% 
+%     if(~isSubtournament(TT5, M) && ~isSubtournament(H5, M))
+%         nsuccesses = nsuccesses+1;
+%         successes = [successes, {M}];
+%     end
+% end
+
+nsuccesses = 0
+successes = []
+
+%Adapted from: https://www.mathworks.com/matlabcentral/answers/29837-processing-files-using-a-for-loop
+myDir = 'TT5-Free/10-Vertex/';
+myFiles = dir(fullfile(myDir,'*.txt')); %gets all wav files in struct
+%Note: This is lexicographic ordering. Mat300.txt comes before Mat99.txt
+for k = 1:length(myFiles)
+    baseFileName = myFiles(k).name;
+    fullFileName = fullfile(myDir, baseFileName);
+    fprintf(1, 'Now reading %s\n', fullFileName);
+    M = readmatrix(strcat(fullFileName));
+    if(~isSubtournament(H5, M))
+        nsuccesses = nsuccesses+1;
+        successes = [successes, {M}];
+    end
+    nsuccesses
+end
+
+M = successes{1};
+writematrix(M, 'H5Free.txt', 'Delimiter', ' ')
+%v = [6, 2, 3, 4, 9, 10, 1, 5, 7, 8]; M(v, v)
+v = [6, 2, 3, 4, 9, 10]; M(v, v) %Grab a subtournament consisting of one vertex and its 5 outneighbors
+writematrix(M(v, v), 'SubH5Free.txt', 'Delimiter', ' ')
+return;
+
+QR27 = makeQR(27); %Bad, prime powers aren't circulant, not a tournament!!!
+TT6 = [zeros(6, 1), [ones(1, 5); TT5]];
+%isSubtournament(TT6, QR27)
+
+function QR = makeQR(n)
+    qr = zeros(1, n);
+    for i = 1:n-1
+        if mod(i^2, n) > 0
+            qr( mod(i^2, n) + 1) = 1;
+        end
+    end
+    QR = zeros(n, n);
+    for i = 0:n-1
+        QR(i+1, :) = circshift(qr, i);
+    end
+end
